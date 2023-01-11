@@ -4,3 +4,11 @@ import matplotlib.pyplot as plt
 
 im = cv.imread('emma_gray.jpg', cv.IMREAD_GRAYSCALE)
 
+if (0<=im and im<=100):
+  t1 = im
+elif (100<im and im<=150):
+  t1 = (155/100) * (im - 50) + 100
+else:
+  t2 = im
+  
+im_new = z=np.concatenate((t1,t2,t3))
