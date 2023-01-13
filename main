@@ -16,3 +16,39 @@ img_new = pixVal_vec(img)
 
 plt.imshow(img_new, cmap='gray', vmin=0, vmax=255)
 plt.show()
+
+
+import cv2 as cv
+import numpy as np
+import matplotlib.pyplot as plt
+im1 = cv.imread('highlights_and_shadows.jpg', cv.IMREAD_COLOR) #read image
+im1 = cv.cvtColor(im1, cv.COLOR_BGR2RGB) #convert BGR to RGB
+im_L = cv.cvtColor(im1, cv.COLOR_RGB2LAB) #convert RGB to L*a*b color space
+
+gamma = 2 #lightness (L plane) gamma value
+arr = np.array([(i/255)**gamma*255 for i in range (0, 256)]).astype(np.uint8) #define gamma array
+im_gamma = arr[im_L] #indexing the transformartion arr with the values of pixels in the im_L
+
+#show output
+plt.subplot(121),plt.imshow(im1, vmin=0, vmax=255)
+plt.title('ORIGINAL IMAGE'), plt.xticks([]), plt.yticks([])
+plt.subplot(122),plt.imshow(im_L, vmin=0, vmax=255)
+plt.title('GAMMA CORRECTED Lab IMAGE'), plt.xticks([]), plt.yticks([])
+plt.show()
+
+#show histograms original vs corrected image
+hist_r = cv.calcHist([im_gamma], [0], None, [256], [0,256])
+hist_g = cv.calcHist([im_gamma], [1], None, [256], [0,256])
+hist_b = cv.calcHist([im_gamma], [2], None, [256], [0,256])
+
+hist_r_g = cv.calcHist([im1], [0], None, [256], [0,256])
+hist_g_g = cv.calcHist([im1], [1], None, [256], [0,256])
+hist_b_g = cv.calcHist([im1], [2], None, [256], [0,256])
+
+plt.subplot(121), plt.plot(hist_r, 'r', hist_g, 'g', hist_b, 'b')
+plt.title('ORIGINAL IMAGE'), plt.xlim([0,256])
+plt.subplot(122), plt.plot(hist_r_g, 'r', hist_g_g, 'g', hist_b_g, 'b')
+plt.title('GAMMA CORRECTED Lab IMAGE'), plt.xlim([0,256])
+plt.show()
+
+
