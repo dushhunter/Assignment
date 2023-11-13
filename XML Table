@@ -1,0 +1,19 @@
+import xml.etree.ElementTree as ET
+
+def extract_table(xml_file_path, table_id):
+    tree = ET.parse(xml_file_path)
+    root = tree.getroot()
+
+    # Assuming your tables have a common tag like 'table'
+    tables = root.findall('.//table')
+
+    for table in tables:
+        if 'id' in table.attrib and table.attrib['id'] == table_id:
+            # You've found the specific table, now you can process its rows
+            rows = table.findall('.//row')  # Replace 'row' with the actual tag used for rows
+            for row in rows:
+                # Process each row as needed
+                print(ET.tostring(row).decode())  # Example: printing the raw XML of each row
+
+# Example usage
+extract_table('your_file.xml', 'your_table_id')
