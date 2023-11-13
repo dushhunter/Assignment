@@ -17,3 +17,23 @@ def extract_table(xml_file_path, table_id):
 
 # Example usage
 extract_table('your_file.xml', 'your_table_id')
+
+
+import xml.etree.ElementTree as ET
+
+def extract_table(xml_file_path, table_id):
+    tree = ET.parse(xml_file_path)
+    root = tree.getroot()
+
+    # Assuming each table has an attribute 'id' for identification
+    for table in root.findall(".//table[@id='{}']".format(table_id)):
+        # Process or return the specific table
+        return ET.tostring(table, encoding='utf-8').decode('utf-8')
+
+# Example usage
+xml_file_path = 'path/to/your/file.xml'
+table_id_to_extract = 'specific_table_id'
+
+specific_table = extract_table(xml_file_path, table_id_to_extract)
+print(specific_table)
+
