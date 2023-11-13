@@ -37,3 +37,37 @@ table_id_to_extract = 'specific_table_id'
 specific_table = extract_table(xml_file_path, table_id_to_extract)
 print(specific_table)
 
+
+
+import xml.etree.ElementTree as ET
+import json
+
+def extract_table(xml_file_path, table_id):
+    tree = ET.parse(xml_file_path)
+    root = tree.getroot()
+
+    # Find the table with the specified ID
+    target_table = None
+    for table in root.findall(".//table[@id='{}']".format(table_id)):
+        target_table = table
+        break
+
+    if target_table is not None:
+        # Convert the table to a dictionary
+        table_data = {}
+        for row in target_table.findall(".//row"):
+            row_data = [cell.text for cell in row.findall(".//cell")]
+            table_data[row.attrib['id']] = row_data
+
+        # Convert to JSON
+        json_data = json.dumps(table_data, indent=2)
+        return json_data
+    else:
+        return "Table with ID '{}' not found.".format(table_id)
+
+# Example usage
+xml_file_path = 'path/to/your/file.xml'
+table_id = 'your_table_id'
+json_output = extract_table(xml_file_path, table_id)
+print(json_output)
+
